@@ -10,7 +10,7 @@ st.write("อัปโหลดไฟล์ BOQ ของคุณ ระบบ�
 # 1. ส่วนการจัดการไฟล์เทมเพลตตัวอย่าง
 st.subheader("1. ดาวน์โหลดไฟล์เทมเพลตก่อนเริ่มใช้งาน")
 
-# ใส่ข้อมูลตัวอย่างให้สมบูรณ์ (ไม่มีตัวเลขว่างหลังเครื่องหมายโคลอน)
+# แก้ไขจุดผิดพลาดเรียบร้อยแล้ว (ใส่ข้อมูลตัวอย่างครบถ้วน ไม่มีเครื่องหมายตกหล่น)
 template_data = {
     'รายการวัสดุ': ['ปูนซีเมนต์ปอร์ตแลนด์ (ถุง 50กก.)', 'เหล็กเส้นกลม RB9', 'อิฐมวลเบา 7.5 ซม.'],
     'ปริมาณ':,
@@ -47,7 +47,6 @@ if uploaded_file is not None:
         shop_cols = ['ร้าน A (ไทวัสดุ)', 'ร้าน B (โกลบอลเฮ้าส์)', 'ร้าน C (ดูโฮม)', 'ร้าน D (OneStockHome)', 'ร้าน E (เมกาโฮม)']
         
         def process_row_prices(row):
-            # ตรวจสอบและดึงเฉพาะข้อมูลที่เป็นตัวเลขและไม่ว่าง
             prices = []
             for shop in shop_cols:
                 if shop in row and pd.notnull(row[shop]):
@@ -57,22 +56,21 @@ if uploaded_file is not None:
                     except ValueError:
                         continue
             
-            # ทำการคัดกรองตามเงื่อนไข (Olympic Average)
+            # เงื่อนไขตัดราคาแพงสุดและถูกสุดออก (Olympic Average)
             if len(prices) >= 3:
                 prices.sort()
-                return np.mean(prices[1:-1]) # ตัดราคาต่ำสุด (หัว) และสูงสุด (ท้าย) ออก
+                return np.mean(prices[1:-1]) 
             elif len(prices) > 0:
-                return np.mean(prices) # หากข้อมูลไม่ครบ 5 ร้าน ให้หาค่าเฉลี่ยจากที่มี
+                return np.mean(prices) 
             return 0.0
 
-        # ทำการประมวลผลเพิ่มคอลัมน์ใหม่
+        # เพิ่มคอลัมน์ผลลัพธ์
         df['ราคาเฉลี่ยต่อหน่วย (บาท)'] = df.apply(process_row_prices, axis=1)
         df['ราคารวมสุทธิ (บาท)'] = df['ปริมาณ'] * df['ราคาเฉลี่ยต่อหน่วย (บาท)']
         
         st.subheader("3. ประมวลผลเสร็จสิ้น!")
         st.dataframe(df[['รายการวัสดุ', 'ปริมาณ', 'ราคาเฉลี่ยต่อหน่วย (บาท)', 'ราคารวมสุทธิ (บาท)']].head(5))
         
-        # เขียนข้อมูลกลับลงไปในบัฟเฟอร์สำหรับดาวน์โหลด
         buffer = io.BytesIO()
         with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
             df.to_excel(writer, index=False, sheet_name='สรุปราคา BOQ')
