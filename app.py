@@ -8,20 +8,22 @@ from duckduckgo_search import DDGS
 
 st.set_page_config(page_title="AI BOQ Auto-Price", layout="centered", page_icon="🏗️")
 
-# --- ส่วนของการเปลี่ยนฟอนต์เป็น Kanit ด้วย CSS ---
+# --- ส่วนแก้ไข CSS ฟอนต์ Kanit ป้องกันข้อความซ้อนกัน ---
 st.markdown("""
     <style>
     @import url('https://googleapis.com');
     
-    html, body, [class*="css"], .stApp {
+    /* สั่งเปลี่ยนฟอนต์ทุกส่วนยกเว้นไอคอนระบบ */
+    html, body, [class*="css"], .stApp, div, span, p, a, label {
         font-family: 'Kanit', sans-serif !important;
     }
     h1, h2, h3, h4, h5, h6 {
         font-family: 'Kanit', sans-serif !important;
         font-weight: 600 !important;
     }
-    p, span, label, button, .stButton {
-        font-family: 'Kanit', sans-serif !important;
+    /* ป้องกันปัญหาข้อความในปุ่มอัปโหลดซ้อนกัน */
+    .stFileUploader button span {
+        display: inline-block !important;
     }
     </style>
     """, unsafe_allow_html=True)
