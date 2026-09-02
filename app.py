@@ -8,12 +8,11 @@ from duckduckgo_search import DDGS
 
 st.set_page_config(page_title="AI BOQ Auto-Price", layout="centered", page_icon="🏗️")
 
-# --- ส่วนแก้ไข CSS ฟอนต์ Kanit ป้องกันข้อความซ้อนกัน ---
+# --- ส่วนแก้ไข CSS ซ่อนปุ่มเดิมและทำปุ่มอัปโหลดใหม่ไม่ให้ซ้อนกัน ---
 st.markdown("""
     <style>
     @import url('https://googleapis.com');
     
-    /* สั่งเปลี่ยนฟอนต์ทุกส่วนยกเว้นไอคอนระบบ */
     html, body, [class*="css"], .stApp, div, span, p, a, label {
         font-family: 'Kanit', sans-serif !important;
     }
@@ -21,9 +20,31 @@ st.markdown("""
         font-family: 'Kanit', sans-serif !important;
         font-weight: 600 !important;
     }
-    /* ป้องกันปัญหาข้อความในปุ่มอัปโหลดซ้อนกัน */
-    .stFileUploader button span {
-        display: inline-block !important;
+    
+    /* 1. สั่งซ่อนข้อความภาษาอังกฤษดั้งเดิมของระบบ Streamlit ทั้งหมดในกล่องอัปโหลด */
+    .stFileUploader button {
+        font-size: 0 !important;
+        background-color: #262730 !important;
+        border: 1px solid #464855 !important;
+        padding: 8px 16px !important;
+        border-radius: 8px !important;
+        position: relative !important;
+    }
+    .stFileUploader button::after {
+        content: "เลือกไฟล์จากคอมพิวเตอร์" !important;
+        font-family: 'Kanit', sans-serif !important;
+        font-size: 14px !important;
+        color: #FFFFFF !important;
+        display: block !important;
+    }
+    .stFileUploader section div div {
+        font-size: 0 !important;
+    }
+    .stFileUploader section div div::after {
+        content: "รองรับไฟล์ .XLSX ขนาดไม่เกิน 200MB" !important;
+        font-family: 'Kanit', sans-serif !important;
+        font-size: 14px !important;
+        color: #A3A8B4 !important;
     }
     </style>
     """, unsafe_allow_html=True)
