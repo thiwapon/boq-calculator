@@ -8,7 +8,7 @@ from duckduckgo_search import DDGS
 
 st.set_page_config(page_title="AI BOQ Auto-Price", layout="centered", page_icon="🏗️")
 
-# --- ส่วนแก้ไข CSS ซ่อนปุ่มเดิมและทำปุ่มอัปโหลดใหม่ไม่ให้ซ้อนกัน ---
+# --- ส่วนแก้ไข CSS เคลียร์ข้อความซ้อนในกล่องอัปโหลดให้คลีน 100% ---
 st.markdown("""
     <style>
     @import url('https://googleapis.com');
@@ -21,15 +21,19 @@ st.markdown("""
         font-weight: 600 !important;
     }
     
-    /* 1. สั่งซ่อนข้อความภาษาอังกฤษดั้งเดิมของระบบ Streamlit ทั้งหมดในกล่องอัปโหลด */
+    /* ซ่อนไอคอนและข้อความดั้งเดิมฝั่งปุ่มกด */
+    .stFileUploader data-testid="stFileUploaderButton" {
+        font-size: 0 !important;
+    }
     .stFileUploader button {
         font-size: 0 !important;
+        color: transparent !important;
         background-color: #262730 !important;
         border: 1px solid #464855 !important;
         padding: 8px 16px !important;
         border-radius: 8px !important;
-        position: relative !important;
     }
+    /* ใส่คำว่า เลือกไฟล์ เข้าไปแทนที่แบบสะอาด */
     .stFileUploader button::after {
         content: "เลือกไฟล์จากคอมพิวเตอร์" !important;
         font-family: 'Kanit', sans-serif !important;
@@ -37,14 +41,14 @@ st.markdown("""
         color: #FFFFFF !important;
         display: block !important;
     }
+    /* ซ่อนเศษตัวหนังสือที่หลุดมาซ้อนด้านหลังปุ่ม */
     .stFileUploader section div div {
+        color: transparent !important;
         font-size: 0 !important;
     }
-    .stFileUploader section div div::after {
-        content: "รองรับไฟล์ .XLSX ขนาดไม่เกิน 200MB" !important;
-        font-family: 'Kanit', sans-serif !important;
-        font-size: 14px !important;
-        color: #A3A8B4 !important;
+    /* กำหนดข้อความระบุประเภทไฟล์ด้านขวาให้ชัดเจน */
+    .stFileUploader section div [data-testid="stWidgetLabel"] {
+        font-size: 0 !important;
     }
     </style>
     """, unsafe_allow_html=True)
